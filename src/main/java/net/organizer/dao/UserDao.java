@@ -1,5 +1,6 @@
 package net.organizer.dao;
 
+import net.organizer.dto.AuthUser;
 import net.organizer.dto.Role;
 import net.organizer.dto.User;
 import org.apache.log4j.Logger;
@@ -20,12 +21,15 @@ public class UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static final String SELECT_ALL = "SELECT * FROM users";
+    private static final String SELECT_ALL = "SELECT * FROM users INNER JOIN user_roles ON users.role_id = user_roles.role_id";
     private static final String INSERT = "INSERT INTO users (username, password, name, enabled, role_id) VALUES (?, ?, ?, ?, ?)";
-    private static final String SELECT_BY_USERNAME = "SELECT * FROM users WHERE username = ?";
-    private static final String SELECT_BY_ID = "SELECT * FROM users WHERE id = ?";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM users INNER JOIN user_roles ON users.role_id = user_roles.role_id WHERE username = ?";
+    private static final String SELECT_BY_ID = "SELECT * FROM users INNER JOIN user_roles ON users.role_id = user_roles.role_id WHERE id = ?";
     private static final String SELECT_ROLES = "SELECT * FROM user_roles";
     private static final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
+    private static final String UPDATE = "UPDATE users SET password = ?, name = ?, enabled = ?, role_id = ? WHERE id = ?";
+    private static final String SELECT_NAME_BY_LOGIN = "SELECT name FROM users WHERE username = ?";
+    private static final String SELECT_AUTH_USER = "SELECT u.id, u.name, r.authority FROM users u INNER JOIN user_roles r ON u.role_id = r.role_id WHERE u.username = ?";
 
     public User getUserByUsername(String login) {
         User user = jdbcTemplate.queryForObject(SELECT_BY_USERNAME, new UserRowMapper(), login);
@@ -38,7 +42,7 @@ public class UserDao {
     }
 
     public void addUser(User user) {
-        jdbcTemplate.update(INSERT, user.getLogin(), user.getPassword(), user.getName(), user.getEnabled(), user.getRoleId());
+        jdbcTemplate.update(INSERT, user.getLogin(), user.getPassword(), user.getName(), user.getEnabled(), user.getRole().getId());
     }
 
     public List<Role> getRoles() {
@@ -55,6 +59,20 @@ public class UserDao {
         jdbcTemplate.update(DELETE_USER_BY_ID, id);
     }
 
+    public void update(User user) {
+        jdbcTemplate.update(UPDATE, user.getPassword(), user.getName(), user.getEnabled(), user.getRole().getId(), user.getId());
+    }
+
+    public String getNameByLogin(String login) {
+        String name = jdbcTemplate.queryForObject(SELECT_NAME_BY_LOGIN, String.class, login);
+        return name;
+    }
+
+    public AuthUser getAuthUser(String login) {
+        AuthUser authUser = jdbcTemplate.queryForObject(SELECT_AUTH_USER, new AuthUserRowMapper(), login);
+        return authUser;
+    }
+
     public static class UserRowMapper implements RowMapper<User> {
         @Override
         public User mapRow(ResultSet resultSet, int i) throws SQLException {
@@ -64,7 +82,10 @@ public class UserDao {
             user.setPassword(resultSet.getString("password"));
             user.setName(resultSet.getString("name"));
             user.setEnabled(resultSet.getBoolean("enabled"));
-            user.setRoleId(resultSet.getInt("role_id"));
+            Role role = new Role();
+            role.setId(resultSet.getInt("role_id"));
+            role.setAuthority(resultSet.getString("authority"));
+            user.setRole(role);
             return user;
         }
     }
@@ -74,9 +95,21 @@ public class UserDao {
         @Override
         public Role mapRow(ResultSet resultSet, int i) throws SQLException {
             Role role = new Role();
-            role.setId(resultSet.getInt("id"));
+            role.setId(resultSet.getInt("role_id"));
             role.setAuthority(resultSet.getString("authority"));
             return role;
+        }
+    }
+
+    public static class AuthUserRowMapper implements RowMapper<AuthUser> {
+
+        @Override
+        public AuthUser mapRow(ResultSet resultSet, int i) throws SQLException {
+            AuthUser authUser = new AuthUser();
+            authUser.setId(resultSet.getInt("id"));
+            authUser.setName(resultSet.getString("name"));
+            authUser.setRole(resultSet.getString("authority"));
+            return authUser;
         }
     }
 }

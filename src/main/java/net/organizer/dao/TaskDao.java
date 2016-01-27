@@ -8,12 +8,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -26,14 +20,14 @@ public class TaskDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static final String SELECT_ALL = "SELECT * FROM task";
+    private static final String SELECT_TASKS_BY_AUTHOR = "SELECT * FROM task WHERE author = ?";
     private static final String SELECT_BY_ID = "SELECT * FROM task WHERE id = ?";
-    private static final String INSERT = "INSERT INTO task (name, creationDate, targetDate) VALUES (?, ?, ?)";
+    private static final String INSERT = "INSERT INTO task (name, creationDate, targetDate, author) VALUES (?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM task WHERE id=?";
     private static final String UPDATE = "UPDATE task SET name = ?, targetDate = ? WHERE id=?";
 
-    public List<Task> getAll() {
-        List<Task> tasks = jdbcTemplate.query(SELECT_ALL, new TaskRowMapper());
+    public List<Task> getByAuthor(Integer authorId) {
+        List<Task> tasks = jdbcTemplate.query(SELECT_TASKS_BY_AUTHOR, new TaskRowMapper(), authorId);
         return tasks;
     }
 
@@ -43,7 +37,7 @@ public class TaskDao {
     }
 
     public void add(Task task) {
-        jdbcTemplate.update(INSERT, task.getName(), task.getCreationDate(), task.getTargetDate());
+        jdbcTemplate.update(INSERT, task.getName(), task.getCreationDate(), task.getTargetDate(), task.getAuthorId());
     }
 
     public void delete(Integer id) throws Exception {

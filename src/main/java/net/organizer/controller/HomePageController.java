@@ -1,27 +1,14 @@
 package net.organizer.controller;
 
-import net.organizer.dao.TaskDao;
-import net.organizer.dao.UserDao;
+import net.organizer.dto.AuthUser;
 import net.organizer.dto.Task;
-import net.organizer.dto.User;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.Lifecycle;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Path;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -34,17 +21,17 @@ public class HomePageController extends BaseController {
     private static final Logger LOGGER = Logger.getLogger(HomePageController.class);
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
-    public String getHomePage(Model model, HttpServletRequest request) {
-        LOGGER.info("Home Page");
-        List<Task> tasks = taskDao.getAll();
+    public String getHomePage(Model model) {
+        AuthUser authUser = userDao.getAuthUser(getLogin());
+        List<Task> tasks = taskDao.getByAuthor(authUser.getId());
         model.addAttribute("tasks", tasks);
-        model.addAttribute("login", getLogin());
-        model.addAttribute("role", getRole());
+        model.addAttribute("authUser", authUser);
         return "home";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Model model) {
+        addAuthenticatedUserToModel(model);
         return "addTask";
     }
 
@@ -69,6 +56,8 @@ public class HomePageController extends BaseController {
                 taskDao.update(task);
             } else {
                 task.setCreationDate(new Date());
+                AuthUser authUser = userDao.getAuthUser(getLogin());
+                task.setAuthorId(authUser.getId());
                 taskDao.add(task);
             }
 
@@ -95,6 +84,7 @@ public class HomePageController extends BaseController {
         try {
             Task task = taskDao.getById(id);
             model.addAttribute("task", task);
+            addAuthenticatedUserToModel(model);
         } catch (Exception e) {
             LOGGER.error("Error edit task");
         }

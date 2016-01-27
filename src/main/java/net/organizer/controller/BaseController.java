@@ -2,9 +2,11 @@ package net.organizer.controller;
 
 import net.organizer.dao.TaskDao;
 import net.organizer.dao.UserDao;
+import net.organizer.dto.AuthUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 
 import java.util.Collection;
 import java.util.List;
@@ -26,10 +28,9 @@ public class BaseController {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
 
-    protected String getRole() {
-        String authority = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
-        String role = authority.substring(1, authority.length() - 1);
-        return role;
+    protected void addAuthenticatedUserToModel(Model model) {
+        AuthUser authUser = userDao.getAuthUser(getLogin());
+        model.addAttribute("authUser", authUser);
     }
 
 }

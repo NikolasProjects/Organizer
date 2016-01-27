@@ -18,7 +18,7 @@
 <div class="container">
     <form action="/add/user" method="post">
 
-        <input type="hidden" name="id" value="${user.id}"/>
+            <input id="userId" type="hidden" name="id" value="${user.id}"/>
 
         <div class="form-group">
             <label for="userLogin">Login</label>
@@ -37,10 +37,10 @@
 
         <div class="form-group">
             <label for="userRole">Role</label>
-            <select class="form-control" id="userRole" name="roleId" style="width: 15%">
+            <select class="form-control" id="userRole" name="role.id" style="width: 15%">
                 <c:choose>
-                    <c:when test="${not empty user.roleId }">
-                        <option value="${user.roleId}" selected>${userRole}</option>
+                    <c:when test="${not empty user.role.id}">
+                        <option value="${user.role.id}" selected>${user.role.authority}</option>
                     </c:when>
                     <c:otherwise>
                         <option value="0" selected disabled>Select role</option>
@@ -54,7 +54,8 @@
 
         <div class="form-group">
             <label for="userEnabled">Enabled</label>
-            <input type="checkbox" class="form-control" id="userEnabled" name="enabled" value="${user.enabled}" style="width: 18px; height: 18px;"/>
+            <input type="checkbox" class="form-control" id="userEnabled" name="enabled" value="${user.enabled}"
+                   style="width: 18px; height: 18px;"/>
         </div>
 
         <button type="submit" class="btn btn-success">Submit</button>
@@ -63,8 +64,25 @@
 </div>
 <%@include file="../jspf/footer.jspf" %>
 <script>
+    var enabledCheckBox = $("#userEnabled");
+    var userLoginInput = $("#userLogin");
+    var isUserEditing = $("#userId").val() !== '' ? true : false;
 
     $(function () {
+
+        userLoginInput.prop("disabled", isUserEditing);
+
+        if (enabledCheckBox.val()) {
+            enabledCheckBox.prop("checked", true);
+        }
+
+        enabledCheckBox.click(function () {
+            if ($(this).is(':checked')) {
+                enabledCheckBox.val(true);
+            } else {
+                enabledCheckBox.val(false);
+            }
+        })
 
     });
 </script>

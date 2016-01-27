@@ -4,18 +4,18 @@ package net.organizer.dto;
  * Created by Nikolay on 14.01.2016.
  */
 public class User {
-    private int id;
+    private Integer id;
     private String login;
     private String password;
     private String name;
     private Boolean enabled;
-    private Integer roleId;
+    private Role role;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -51,12 +51,12 @@ public class User {
         this.enabled = enabled;
     }
 
-    public Integer getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class User {
                 ", password='" + password + '\'' +
                 ", name='" + name + '\'' +
                 ", enabled=" + enabled +
-                ", roleId=" + roleId +
+                ", role=" + role +
                 '}';
     }
 

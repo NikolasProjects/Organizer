@@ -16,6 +16,7 @@ public class Task {
     private Date creationDate;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date targetDate;
+    private Integer authorId;
 
     public Integer getId() {
         return id;
@@ -49,6 +50,14 @@ public class Task {
         this.targetDate = targetDate;
     }
 
+    public Integer getAuthorId() {
+        return authorId;
+    }
+
+    public void setAuthorId(Integer authorId) {
+        this.authorId = authorId;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -56,6 +65,7 @@ public class Task {
                 ", name='" + name + '\'' +
                 ", creationDate=" + creationDate +
                 ", targetDate=" + targetDate +
+                ", authorId=" + authorId +
                 '}';
     }
 }

@@ -29,7 +29,7 @@
             <tr id="${user.id}">
                 <td>${user.login}</td>
                 <td>${user.name}</td>
-                <td>${user.roleId}</td>
+                <td>${user.role.authority}</td>
                 <td>${user.enabled}</td>
                 <td>
                     <a href="/edit/user?id=${user.id}" class="btn btn-warning">Edit</a>

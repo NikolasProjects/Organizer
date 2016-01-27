@@ -18,7 +18,7 @@
                 <li><a href="/add">New Task</a></li>
             </ul>
 
-            <c:if test="${role == 'ROLE_ADMIN'}">
+            <c:if test="${authUser.role == 'ROLE_ADMIN'}">
                 <ul class="nav navbar-nav">
                     <li><a href="/add/user">Add User</a></li>
                 </ul>
@@ -28,7 +28,7 @@
             </c:if>
 
             <p class="navbar-text pull-right ">
-                ${login} <a href="<c:url value="/j_spring_security_logout"/>" style="color: #8A2908">ВЫХОД</a>
+                ${authUser.name} <a href="<c:url value="/j_spring_security_logout"/>" style="color: #8A2908">ВЫХОД</a>
             </p>
         </div>
     </div>

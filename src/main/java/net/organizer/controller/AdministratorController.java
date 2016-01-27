@@ -3,8 +3,10 @@ package net.organizer.controller;
 import net.organizer.dto.Role;
 import net.organizer.dto.User;
 import net.organizer.utils.PasswordEncryptor;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,51 +17,46 @@ import java.util.List;
 @Controller
 public class AdministratorController extends BaseController{
 
+    private static final Logger LOGGER = Logger.getLogger(AdministratorController.class);
+
     @RequestMapping(value = "/add/user", method = RequestMethod.GET)
     public String addUserGet(Model model) {
-        if (!getRole().equals(Role.ROLE_ADMIN)) {
-            return "redirect:/home";
-        }
         List<Role> roles = userDao.getRoles();
-        model.addAttribute("login", getLogin());
-        model.addAttribute("role", getRole());
         model.addAttribute("roles", roles);
+        addAuthenticatedUserToModel(model);
         return "addUser";
     }
 
     @RequestMapping(value = "/add/user", method = RequestMethod.POST)
-    public String saveUser(@ModelAttribute User user) {
-        if (!getRole().equals(Role.ROLE_ADMIN)) {
-            return "redirect:/home";
+    public String saveUser(@ModelAttribute User user, BindingResult bindingResult) throws Exception{
+        if (bindingResult.hasErrors()) {
+            LOGGER.error(bindingResult.getGlobalError());
         }
-        String encryptedPassword = PasswordEncryptor.encryptPasswordMD5(user.getPassword());
-        user.setPassword(encryptedPassword);
-        userDao.addUser(user);
+        if (user.getId() != null) {
+            userDao.update(user);
+        } else {
+            String encryptedPassword = PasswordEncryptor.encryptPasswordMD5(user.getPassword());
+            user.setPassword(encryptedPassword);
+            userDao.addUser(user);
+        }
         return "redirect:/home";
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public String getUsers(Model model) {
-        if (!getRole().equals(Role.ROLE_ADMIN)) {
-            return "redirect:/home";
-        }
         List<User> users = userDao.getUsers();
-        model.addAttribute("login", getLogin());
         model.addAttribute("users", users);
-        model.addAttribute("role", getRole());
+        addAuthenticatedUserToModel(model);
         return "admin";
     }
 
     @RequestMapping(value = "/edit/user", method = RequestMethod.GET)
     public String editUser(Model model, @RequestParam(value = "id") Integer id) {
-        if (!getRole().equals(Role.ROLE_ADMIN)) {
-            return "redirect:/home";
-        }
         User user = userDao.getUserById(id);
         List<Role> roles = userDao.getRoles();
         model.addAttribute("user", user);
         model.addAttribute("roles", roles);
-        model.addAttribute("userRole", getRole());
+        addAuthenticatedUserToModel(model);
         return "addUser";
     }
 
