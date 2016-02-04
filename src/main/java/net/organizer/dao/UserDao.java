@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,7 +23,7 @@ public class UserDao {
     private JdbcTemplate jdbcTemplate;
 
     private static final String SELECT_ALL = "SELECT * FROM users INNER JOIN user_roles ON users.role_id = user_roles.role_id";
-    private static final String INSERT = "INSERT INTO users (username, password, name, enabled, role_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO users (username, password, name, enabled, role_id, photo) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String SELECT_BY_USERNAME = "SELECT * FROM users INNER JOIN user_roles ON users.role_id = user_roles.role_id WHERE username = ?";
     private static final String SELECT_BY_ID = "SELECT * FROM users INNER JOIN user_roles ON users.role_id = user_roles.role_id WHERE id = ?";
     private static final String SELECT_ROLES = "SELECT * FROM user_roles";
@@ -30,6 +31,7 @@ public class UserDao {
     private static final String UPDATE = "UPDATE users SET password = ?, name = ?, enabled = ?, role_id = ? WHERE id = ?";
     private static final String SELECT_NAME_BY_LOGIN = "SELECT name FROM users WHERE username = ?";
     private static final String SELECT_AUTH_USER = "SELECT u.id, u.name, r.authority FROM users u INNER JOIN user_roles r ON u.role_id = r.role_id WHERE u.username = ?";
+    private static final String SELECT_PHOTO = "SELECT photo FROM users WHERE username = ?";
 
     public User getUserByUsername(String login) {
         User user = jdbcTemplate.queryForObject(SELECT_BY_USERNAME, new UserRowMapper(), login);
@@ -41,8 +43,8 @@ public class UserDao {
         return user;
     }
 
-    public void addUser(User user) {
-        jdbcTemplate.update(INSERT, user.getLogin(), user.getPassword(), user.getName(), user.getEnabled(), user.getRole().getId());
+    public void addUser(User user) throws IOException {
+        jdbcTemplate.update(INSERT, user.getLogin(), user.getPassword(), user.getName(), user.getEnabled(), user.getRole().getId(), user.getPhoto().getBytes());
     }
 
     public List<Role> getRoles() {
@@ -71,6 +73,12 @@ public class UserDao {
     public AuthUser getAuthUser(String login) {
         AuthUser authUser = jdbcTemplate.queryForObject(SELECT_AUTH_USER, new AuthUserRowMapper(), login);
         return authUser;
+    }
+
+    public byte[] getPhoto(String login) {
+        return jdbcTemplate.queryForObject(SELECT_PHOTO, (resultSet, i) -> {
+            return resultSet.getBytes("photo");
+        }, login);
     }
 
     public static class UserRowMapper implements RowMapper<User> {

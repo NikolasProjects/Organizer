@@ -17,6 +17,7 @@ public class Task {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date targetDate;
     private Integer authorId;
+    private boolean outDated;
 
     public Integer getId() {
         return id;
@@ -58,6 +59,14 @@ public class Task {
         this.authorId = authorId;
     }
 
+    public boolean isOutDated() {
+        return outDated;
+    }
+
+    public void setOutDated(boolean outDated) {
+        this.outDated = outDated;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -66,6 +75,7 @@ public class Task {
                 ", creationDate=" + creationDate +
                 ", targetDate=" + targetDate +
                 ", authorId=" + authorId +
+                ", outDated=" + outDated +
                 '}';
     }
 }

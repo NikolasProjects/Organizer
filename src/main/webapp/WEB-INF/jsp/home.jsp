@@ -10,11 +10,13 @@
     <meta name="description" content="HomePage">
     <link href="../resources/css/bootstrap-theme.min.css" rel="stylesheet">
     <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../resources/css/organizer.css" rel="stylesheet">
+    <link href="../resources/css/datatables.min.css" rel="stylesheet">
 </head>
 <body>
 <%@include file="../jspf/header.jspf" %>
 <div class="container">
-    <table class="table table-hover">
+    <table id="taskTable" class="table table-hover">
         <thead>
         <tr>
             <th>Name</th>
@@ -25,7 +27,7 @@
         </thead>
         <tbody>
         <c:forEach var="task" items="${tasks}">
-            <tr id="${task.id}">
+            <tr id="${task.id}" <c:if test="${task.outDated}"> class="outdated-task" </c:if>>
                 <td>${task.name}</td>
                 <td>${task.creationDate}</td>
                 <td>${task.targetDate}</td>
@@ -41,8 +43,15 @@
 
 </body>
 <%@include file="../jspf/footer.jspf" %>
+<script type="text/javascript" src="../resources/js/datatables.min.js"></script>
 <script type="text/javascript">
     $(function() {
+
+       var table = $("#taskTable").dataTable({
+            "orderMulti": false,
+            "orderClasses": false
+        });
+
         $(".deleteBtn").on("click", function() {
             var parentTr = $(this).closest("tr");
             var taskId = parentTr.attr("id");

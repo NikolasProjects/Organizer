@@ -16,9 +16,9 @@
 <body>
 <%@include file="../jspf/header.jspf" %>
 <div class="container">
-    <form action="/add/user" method="post">
+    <form action="/add/user" method="post" enctype="multipart/form-data">
 
-            <input id="userId" type="hidden" name="id" value="${user.id}"/>
+        <input id="userId" type="hidden" name="id" value="${user.id}"/>
 
         <div class="form-group">
             <label for="userLogin">Login</label>
@@ -56,6 +56,11 @@
             <label for="userEnabled">Enabled</label>
             <input type="checkbox" class="form-control" id="userEnabled" name="enabled" value="${user.enabled}"
                    style="width: 18px; height: 18px;"/>
+        </div>
+
+        <div class="form-group">
+            <label for="userPhoto">Photo</label>
+            <input id="userPhoto" type="file" name="photo" accept="image"/>
         </div>
 
         <button type="submit" class="btn btn-success">Submit</button>

@@ -1,5 +1,7 @@
 package net.organizer.dto;
 
+import java.util.Base64;
+
 /**
  * Created by Nikolay on 27.01.2016.
  */
@@ -7,6 +9,8 @@ public class AuthUser {
     private Integer id;
     private String name;
     private String role;
+    private byte[] photo;
+    private String imgSrc;
 
     public Integer getId() {
         return id;
@@ -30,6 +34,24 @@ public class AuthUser {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public String getImgSrc() {
+        String imgBase64 = Base64.getEncoder().encodeToString(photo);
+        imgSrc = String.format("data:image/jpg;base64,{0}", imgBase64);
+        return imgSrc;
+    }
+
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
     }
 
     @Override

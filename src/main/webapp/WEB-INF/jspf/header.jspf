@@ -28,7 +28,8 @@
             </c:if>
 
             <p class="navbar-text pull-right ">
-                ${authUser.name} <a href="<c:url value="/j_spring_security_logout"/>" style="color: #8A2908">ВЫХОД</a>
+            <img src="../getUserPhoto" width="45" height="45">
+            ${authUser.name} <a href="<c:url value="/j_spring_security_logout"/>" style="color: #8A2908">ВЫХОД</a>
             </p>
         </div>
     </div>

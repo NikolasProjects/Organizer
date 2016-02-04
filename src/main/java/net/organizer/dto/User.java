@@ -1,5 +1,7 @@
 package net.organizer.dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 /**
  * Created by Nikolay on 14.01.2016.
  */
@@ -10,6 +12,7 @@ public class User {
     private String name;
     private Boolean enabled;
     private Role role;
+    private MultipartFile photo;
 
     public Integer getId() {
         return id;
@@ -57,6 +60,14 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public MultipartFile getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(MultipartFile photo) {
+        this.photo = photo;
     }
 
     @Override

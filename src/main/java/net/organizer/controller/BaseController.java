@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +26,7 @@ public class BaseController {
     @Autowired
     protected UserDao userDao;
 
-    protected static final String DATE_FORMAT = "DD/MM/yyyy";
+    protected static final String DATE_FORMAT = "dd/MM/yyyy";
 
     protected String getLogin() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
@@ -32,5 +36,7 @@ public class BaseController {
         AuthUser authUser = userDao.getAuthUser(getLogin());
         model.addAttribute("authUser", authUser);
     }
+
+
 
 }

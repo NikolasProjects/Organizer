@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ public class AdministratorController extends BaseController{
     }
 
     @RequestMapping(value = "/add/user", method = RequestMethod.POST)
-    public String saveUser(@ModelAttribute User user, BindingResult bindingResult) throws Exception{
+    public String saveUser(@ModelAttribute User user, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             LOGGER.error(bindingResult.getGlobalError());
         }
@@ -37,7 +38,11 @@ public class AdministratorController extends BaseController{
         } else {
             String encryptedPassword = PasswordEncryptor.encryptPasswordMD5(user.getPassword());
             user.setPassword(encryptedPassword);
-            userDao.addUser(user);
+            try {
+                userDao.addUser(user);
+            } catch (IOException e) {
+                LOGGER.error("Error saving user");
+            }
         }
         return "redirect:/home";
     }
