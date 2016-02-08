@@ -2,24 +2,13 @@ package net.organizer.controller;
 
 import net.organizer.dto.AuthUser;
 import net.organizer.dto.Task;
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.imageio.ImageIO;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -33,14 +22,14 @@ import java.util.List;
  * Created by Nikolay on 15.12.2015.
  */
 @Controller
-public class HomePageController extends BaseController {
+public class OrganizerController extends BaseController {
 
-    private static final Logger LOGGER = Logger.getLogger(HomePageController.class);
+    private static final Logger LOGGER = Logger.getLogger(OrganizerController.class);
 
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public String getHomePage(Model model) {
         AuthUser authUser = userDao.getAuthUser(getLogin());
-        List<Task> tasks = taskDao.getByAuthor(authUser.getId());
+        List<Task> tasks = taskDao.getByAuthor(authUser.getId(), false);
 
         tasks.forEach(task -> {
             LocalDate today = LocalDate.now();
@@ -54,6 +43,15 @@ public class HomePageController extends BaseController {
         model.addAttribute("tasks", tasks);
         model.addAttribute("authUser", authUser);
         return "home";
+    }
+
+    @RequestMapping(value = "/done", method = RequestMethod.GET)
+    public String getCompletedTasks(Model model) {
+        AuthUser authUser = userDao.getAuthUser(getLogin());
+        List<Task> tasks = taskDao.getByAuthor(authUser.getId(), true);
+        model.addAttribute("tasks", tasks);
+        model.addAttribute("authUser", authUser);
+        return "completed";
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
@@ -97,9 +95,20 @@ public class HomePageController extends BaseController {
 
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
-    public String deletePost(@RequestParam(value = "id") Integer id) {
+    public String delete(@RequestParam(value = "id") Integer id) {
         try {
             taskDao.delete(id);
+        } catch (Exception e) {
+            return "error";
+        }
+        return "ok";
+    }
+
+    @RequestMapping(value = "/complete", method = RequestMethod.POST)
+    @ResponseBody
+    public String complete(@RequestParam(value = "id") Integer id) {
+        try {
+            taskDao.complete(id);
         } catch (Exception e) {
             return "error";
         }

@@ -6,10 +6,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <!--отмечаем пекеджи, где используются спринговые аннотации (где есть компоненты)-->
     <context:component-scan base-package="net.organizer.controller"/>
 
-    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
-
+    <!--префикс и суфикс страниц (чтобы не показывать каждый раз полный путь)-->
     <bean id="internalViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"
           p:viewClass="org.springframework.web.servlet.view.JstlView"
           p:prefix="/WEB-INF/jsp/"
@@ -18,9 +18,9 @@
     <bean class="org.springframework.web.servlet.view.BeanNameViewResolver"/>
     <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 
-    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+    <bean id="jsonConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
         <property name="objectMapper">
-            <bean class="org.codehaus.jackson.map.ObjectMapper">
+            <bean class="com.fasterxml.jackson.databind.ObjectMapper">
                 <property name="serializationInclusion" value="NON_NULL"/>
             </bean>
         </property>

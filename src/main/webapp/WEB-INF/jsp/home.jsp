@@ -34,6 +34,7 @@
                 <td>
                     <a href="/edit/${task.id}" class="btn btn-warning">Edit</a>
                     <button type="button" class="btn btn-danger deleteBtn">Delete</button>
+                    <button type="button" class="btn btn-success pull-right completeBtn">Done</button>
                 </td>
             </tr>
         </c:forEach>
@@ -45,17 +46,27 @@
 <%@include file="../jspf/footer.jspf" %>
 <script type="text/javascript" src="../resources/js/datatables.min.js"></script>
 <script type="text/javascript">
-    $(function() {
+    $(function () {
 
-       var table = $("#taskTable").dataTable({
+        $("#taskTable").dataTable({
             "orderMulti": false,
             "orderClasses": false
         });
 
-        $(".deleteBtn").on("click", function() {
+        $(".deleteBtn").on("click", function () {
             var parentTr = $(this).closest("tr");
             var taskId = parentTr.attr("id");
-            deleteTask(taskId).done(function(data){
+            deleteTask(taskId).done(function (data) {
+                if (data == "ok") {
+                    parentTr.remove();
+                }
+            });
+        });
+
+        $(".completeBtn").on("click", function () {
+            var parentTr = $(this).closest("tr");
+            var taskId = parentTr.attr("id");
+            completeTask(taskId).done(function (data) {
                 if (data == "ok") {
                     parentTr.remove();
                 }
@@ -68,7 +79,17 @@
             url: "/delete",
             type: "post",
             data: {
-                id : id
+                id: id
+            }
+        });
+    }
+
+    function completeTask(id) {
+        return $.ajax({
+            url: "/complete",
+            type: "post",
+            data: {
+                id: id
             }
         });
     }

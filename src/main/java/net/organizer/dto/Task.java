@@ -12,12 +12,11 @@ import java.util.Date;
 public class Task {
     private Integer id;
     private String name;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date creationDate;
-    @DateTimeFormat(pattern = "dd/MM/yyyy")
     private Date targetDate;
     private Integer authorId;
     private boolean outDated;
+    private boolean done;
 
     public Integer getId() {
         return id;
@@ -67,6 +66,14 @@ public class Task {
         this.outDated = outDated;
     }
 
+    public boolean isDone() {
+        return done;
+    }
+
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
     @Override
     public String toString() {
         return "Task{" +
@@ -76,6 +83,7 @@ public class Task {
                 ", targetDate=" + targetDate +
                 ", authorId=" + authorId +
                 ", outDated=" + outDated +
+                ", done=" + done +
                 '}';
     }
 }

@@ -20,14 +20,15 @@ public class TaskDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static final String SELECT_TASKS_BY_AUTHOR = "SELECT * FROM task WHERE author = ?";
+    private static final String SELECT_BY_AUTHOR = "SELECT * FROM task WHERE author = ? AND done = ?";
     private static final String SELECT_BY_ID = "SELECT * FROM task WHERE id = ?";
     private static final String INSERT = "INSERT INTO task (name, creationDate, targetDate, author) VALUES (?, ?, ?, ?)";
     private static final String DELETE = "DELETE FROM task WHERE id=?";
+    private static final String UPDATE_STATUS = "UPDATE task SET done = true WHERE id = ?";
     private static final String UPDATE = "UPDATE task SET name = ?, targetDate = ? WHERE id=?";
 
-    public List<Task> getByAuthor(Integer authorId) {
-        List<Task> tasks = jdbcTemplate.query(SELECT_TASKS_BY_AUTHOR, new TaskRowMapper(), authorId);
+    public List<Task> getByAuthor(Integer authorId, boolean done) {
+        List<Task> tasks = jdbcTemplate.query(SELECT_BY_AUTHOR, new TaskRowMapper(), authorId, done);
         return tasks;
     }
 
@@ -42,6 +43,10 @@ public class TaskDao {
 
     public void delete(Integer id) throws Exception {
         jdbcTemplate.update(DELETE, id);
+    }
+
+    public void complete(Integer id) throws Exception {
+        jdbcTemplate.update(UPDATE_STATUS, id);
     }
 
 
@@ -59,6 +64,7 @@ public class TaskDao {
             task.setName(resultSet.getString("name"));
             task.setCreationDate(resultSet.getDate("creationDate"));
             task.setTargetDate(resultSet.getDate("targetDate"));
+            task.setDone(resultSet.getBoolean("done"));
             return task;
         }
     }

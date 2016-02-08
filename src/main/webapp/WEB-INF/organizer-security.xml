@@ -11,6 +11,7 @@
         <intercept-url pattern='/add*' access="isAuthenticated()"/>
         <intercept-url pattern='/add/user*' access="isAuthenticated()"/>
         <intercept-url pattern="/edit/user*" access="isAuthenticated()"/>
+        <intercept-url pattern="/done*" access="isAuthenticated()"/>
         <intercept-url pattern="/resources/**" access="permitAll"/>
 
         <form-login login-page='/login' default-target-url='/home' always-use-default-target='true'

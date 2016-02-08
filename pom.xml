@@ -11,7 +11,6 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring.version>4.0.1.RELEASE</spring.version>
-    <!--<spring.security.version>4.0.1.RELEASE</spring.security.version>-->
     <spring.security.version>3.0.5.RELEASE</spring.security.version>
   </properties>
 
@@ -88,9 +87,9 @@
       <type>jar</type>
     </dependency>
     <dependency>
-      <groupId>org.codehaus.jackson</groupId>
-      <artifactId>jackson-mapper-asl</artifactId>
-      <version>1.9.13</version>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>2.0.2</version>
     </dependency>
     <dependency>
       <groupId>postgresql</groupId>
