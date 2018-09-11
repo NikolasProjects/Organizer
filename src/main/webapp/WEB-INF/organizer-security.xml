@@ -9,8 +9,8 @@
     <http auto-config='true' use-expressions='true'>
         <intercept-url pattern='/home*' access="isAuthenticated()"/>
         <intercept-url pattern='/add*' access="isAuthenticated()"/>
-        <intercept-url pattern='/add/user*' access="isAuthenticated()"/>
-        <intercept-url pattern="/edit/user*" access="isAuthenticated()"/>
+        <intercept-url pattern='/add/user*' access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/edit/user*" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/done*" access="isAuthenticated()"/>
         <intercept-url pattern="/resources/**" access="permitAll"/>
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/css/bootstrap-theme.css.map" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/css/bootstrap-theme.min.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/css/bootstrap.css.map" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/css/bootstrap.min.css" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/fonts/glyphicons-halflings-regular.eot" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/fonts/glyphicons-halflings-regular.svg" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/fonts/glyphicons-halflings-regular.ttf" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/fonts/glyphicons-halflings-regular.woff" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/fonts/glyphicons-halflings-regular.woff2" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/js/bootstrap.min.js" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/js/jquery-2.1.4.min.js" charset="windows-1251" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/js/npm.js" charset="windows-1251" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
